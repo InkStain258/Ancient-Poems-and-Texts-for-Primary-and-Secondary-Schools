@@ -1,0 +1,26 @@
+{
+  "name": "部编古诗文",
+  "short_name": "古诗文",
+  "description": "部编版语文古诗文文化网站 - 探索中华经典诗文之美",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fefce8",
+  "theme_color": "#b45309",
+  "icons": [
+    {
+      "src": "./images/ink- plum.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["education", "books"],
+  "screenshots": [],
+  "lang": "zh-CN",
+  "dir": "ltr"
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="部编版语文古诗文文化网站 - 探索中华经典诗文之美" />
+    <title>部编古诗文</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#b45309" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="部编古诗文" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="部编古诗文 - 探索中华经典诗文之美" />
+    <meta property="og:description" content="涵盖小学到高中部编版语文教材全部古诗文篇目，含注释、赏析、可视化等丰富功能。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="部编古诗文" />
+    <meta property="og:image" content="./images/ink- plum.webp" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="水墨梅花，部编古诗文网站图标" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="部编古诗文 - 探索中华经典诗文之美" />
+    <meta name="twitter:description" content="涵盖小学到高中部编版语文教材全部古诗文篇目，含注释、赏析、可视化等丰富功能。" />
+    <meta name="twitter:image" content="./images/ink- plum.webp" />
+    <script type="module" crossorigin src="./assets/index-DIU-5SR2.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/vendor-react-EpCHMB19.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-ui-CeBLuZs2.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-DO_a9y2N.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Register Service Worker for PWA
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>
