@@ -23,29 +23,36 @@
     --border: 30 10% 85%;
     --input: 30 10% 85%;
     --ring: 24 95% 30%;
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+    --aurora-1: 192 90% 42%;
+    --aurora-2: 262 80% 62%;
+    --aurora-3: 24 95% 55%;
+    --glass-bg: 0 0% 100%;
+    --glass-border: 24 30% 72%;
   }
 
   .dark {
-    --background: 20 14% 6%;
-    --foreground: 36 30% 92%;
-    --card: 20 14% 8%;
-    --card-foreground: 36 30% 92%;
-    --popover: 20 14% 8%;
-    --popover-foreground: 36 30% 92%;
-    --primary: 28 80% 55%;
-    --primary-foreground: 20 14% 6%;
-    --secondary: 20 14% 14%;
-    --secondary-foreground: 36 30% 92%;
-    --muted: 20 14% 14%;
-    --muted-foreground: 36 10% 55%;
-    --accent: 20 14% 18%;
-    --accent-foreground: 36 30% 92%;
-    --destructive: 0 63% 31%;
+    --background: 222 22% 5%;
+    --foreground: 220 25% 93%;
+    --card: 222 18% 8%;
+    --card-foreground: 220 25% 93%;
+    --popover: 222 18% 8%;
+    --popover-foreground: 220 25% 93%;
+    --primary: 32 92% 58%;
+    --primary-foreground: 222 30% 6%;
+    --secondary: 222 14% 13%;
+    --secondary-foreground: 220 20% 88%;
+    --muted: 222 14% 13%;
+    --muted-foreground: 220 10% 58%;
+    --accent: 222 14% 16%;
+    --accent-foreground: 220 20% 90%;
+    --destructive: 0 55% 32%;
     --destructive-foreground: 60 9% 98%;
-    --border: 20 14% 18%;
-    --input: 20 14% 18%;
-    --ring: 28 80% 55%;
+    --border: 222 12% 17%;
+    --input: 222 12% 17%;
+    --ring: 32 92% 58%;
+    --glass-bg: 222 20% 9%;
+    --glass-border: 0 0% 100%;
   }
 }
 
@@ -1512,4 +1519,349 @@ mark.search-highlight {
 
 :root:not(.dark) mark.search-highlight {
   background: hsl(40 85% 65% / 0.4);
+}
+
+/* ================================================================
+   MODERN GLASS × AURORA — 玻璃拟态 × 极光氛围设计层 (v1.3)
+   深色优先 · 冷墨夜色 · 玻璃卡片 · 极光渐变 · 流光细节
+   ================================================================ */
+
+/* ---------- 1. 全局氛围底色 ---------- */
+
+/* 暗色：深邃冷墨夜空 + 顶部微光 */
+.dark body {
+  background-image:
+    radial-gradient(1200px 600px at 70% -10%, hsl(var(--aurora-2) / 0.07) 0%, transparent 60%),
+    radial-gradient(1000px 500px at 15% 0%, hsl(var(--aurora-1) / 0.05) 0%, transparent 55%);
+  background-attachment: fixed;
+}
+
+/* 亮色：暖宣纸 + 极淡青紫晕染 */
+:root:not(.dark) body {
+  background-image:
+    radial-gradient(1100px 550px at 75% -5%, hsl(var(--aurora-2) / 0.05) 0%, transparent 60%),
+    radial-gradient(900px 480px at 10% 0%, hsl(var(--aurora-1) / 0.04) 0%, transparent 55%);
+  background-attachment: fixed;
+}
+
+/* ---------- 2. 极光氛围层（配合 <AuroraBackground />） ---------- */
+
+.aurora-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.dark .aurora-orb-1 {
+  width: 42vw; height: 42vw;
+  top: -14vw; left: -8vw;
+  background: radial-gradient(circle, hsl(var(--aurora-1) / 0.16) 0%, transparent 70%);
+  animation: orbDrift1 38s ease-in-out infinite;
+}
+.dark .aurora-orb-2 {
+  width: 36vw; height: 36vw;
+  top: 18vh; right: -12vw;
+  background: radial-gradient(circle, hsl(var(--aurora-2) / 0.14) 0%, transparent 70%);
+  animation: orbDrift2 46s ease-in-out infinite;
+}
+.dark .aurora-orb-3 {
+  width: 30vw; height: 30vw;
+  bottom: -10vw; left: 30vw;
+  background: radial-gradient(circle, hsl(var(--aurora-3) / 0.09) 0%, transparent 70%);
+  animation: orbDrift3 52s ease-in-out infinite;
+}
+
+:root:not(.dark) .aurora-orb-1 {
+  width: 40vw; height: 40vw;
+  top: -14vw; left: -8vw;
+  background: radial-gradient(circle, hsl(var(--aurora-1) / 0.10) 0%, transparent 70%);
+  animation: orbDrift1 38s ease-in-out infinite;
+}
+:root:not(.dark) .aurora-orb-2 {
+  width: 34vw; height: 34vw;
+  top: 16vh; right: -12vw;
+  background: radial-gradient(circle, hsl(var(--aurora-2) / 0.08) 0%, transparent 70%);
+  animation: orbDrift2 46s ease-in-out infinite;
+}
+:root:not(.dark) .aurora-orb-3 {
+  width: 28vw; height: 28vw;
+  bottom: -10vw; left: 30vw;
+  background: radial-gradient(circle, hsl(var(--aurora-3) / 0.07) 0%, transparent 70%);
+  animation: orbDrift3 52s ease-in-out infinite;
+}
+
+@keyframes orbDrift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(6vw, 4vh) scale(1.12); }
+  66%      { transform: translate(-3vw, 8vh) scale(0.94); }
+}
+@keyframes orbDrift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(-5vw, 6vh) scale(1.08); }
+  75%      { transform: translate(2vw, -3vh) scale(0.95); }
+}
+@keyframes orbDrift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(4vw, -5vh) scale(1.15); }
+}
+
+/* 细噪点，让渐变有质感而非"塑料感" */
+.aurora-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* ---------- 3. 玻璃拟态工具类 ---------- */
+
+.glass {
+  background: hsl(var(--glass-bg) / 0.55);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid hsl(var(--glass-border) / 0.14);
+}
+
+.glass-strong {
+  background: hsl(var(--glass-bg) / 0.78);
+  backdrop-filter: blur(22px) saturate(1.6);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  border: 1px solid hsl(var(--glass-border) / 0.18);
+  box-shadow: 0 8px 32px hsl(0 0% 0% / 0.12);
+}
+
+.glass-hover {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.glass-hover:hover {
+  transform: translateY(-4px);
+  border-color: hsl(var(--primary) / 0.35);
+  box-shadow: 0 12px 40px hsl(var(--primary) / 0.12),
+              0 0 0 1px hsl(var(--primary) / 0.08);
+}
+
+/* 顶栏玻璃 */
+.glass-nav {
+  background: hsl(var(--glass-bg) / 0.62);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+}
+.dark .glass-nav {
+  background: hsl(222 22% 5% / 0.55);
+  box-shadow: 0 1px 0 hsl(0 0% 100% / 0.04) inset;
+}
+:root:not(.dark) .glass-nav {
+  background: hsl(0 0% 100% / 0.66);
+  box-shadow: 0 1px 0 hsl(24 40% 90% / 0.5) inset;
+}
+
+/* 玻璃徽章 / 小胶囊 */
+.glass-chip {
+  background: hsl(var(--glass-bg) / 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid hsl(var(--glass-border) / 0.16);
+  border-radius: 9999px;
+}
+
+/* ---------- 4. 极光渐变文字（双色调主视觉） ---------- */
+
+.text-aurora {
+  background: linear-gradient(
+    100deg,
+    hsl(var(--aurora-3)) 0%,
+    hsl(var(--primary)) 30%,
+    hsl(var(--aurora-2)) 62%,
+    hsl(var(--aurora-1)) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: auroraShift 9s ease-in-out infinite;
+}
+
+:root:not(.dark) .text-aurora {
+  background: linear-gradient(
+    100deg,
+    hsl(24 85% 38%) 0%,
+    hsl(24 90% 45%) 30%,
+    hsl(262 65% 52%) 65%,
+    hsl(192 85% 35%) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: auroraShift 9s ease-in-out infinite;
+}
+
+@keyframes auroraShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* 发光下划线滑入（链接/标题 hover） */
+.underline-sweep {
+  position: relative;
+}
+.underline-sweep::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, hsl(var(--aurora-3)), hsl(var(--aurora-2)), hsl(var(--aurora-1)));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.underline-sweep:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------- 5. 现代玻璃卡片 ---------- */
+
+.card-modern {
+  background: linear-gradient(
+    160deg,
+    hsl(var(--glass-bg) / 0.72) 0%,
+    hsl(var(--glass-bg) / 0.45) 100%
+  );
+  backdrop-filter: blur(14px) saturate(1.35);
+  -webkit-backdrop-filter: blur(14px) saturate(1.35);
+  border: 1px solid hsl(var(--glass-border) / 0.14);
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.06),
+              0 8px 28px hsl(0 0% 0% / 0.08);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 顶部流光 hairline */
+.card-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    hsl(var(--aurora-3) / 0.5) 30%,
+    hsl(var(--aurora-2) / 0.5) 60%,
+    transparent 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.card-modern:hover {
+  transform: translateY(-5px);
+  border-color: hsl(var(--primary) / 0.32);
+  box-shadow:
+    0 18px 48px hsl(var(--primary) / 0.14),
+    0 0 0 1px hsl(var(--primary) / 0.1);
+}
+.card-modern:hover::before {
+  opacity: 1;
+}
+
+.dark .card-modern {
+  background: linear-gradient(
+    160deg,
+    hsl(222 18% 11% / 0.75) 0%,
+    hsl(222 20% 7% / 0.55) 100%
+  );
+}
+
+/* ---------- 6. 按钮辉光 ---------- */
+
+.btn-glow {
+  position: relative;
+  transition: box-shadow 0.35s ease, transform 0.25s ease;
+}
+.btn-glow:hover {
+  box-shadow:
+    0 0 20px hsl(var(--primary) / 0.35),
+    0 0 48px hsl(var(--aurora-2) / 0.18);
+  transform: translateY(-1px);
+}
+.btn-glow:active {
+  transform: translateY(0);
+}
+
+/* ---------- 7. 页面入场（配合路由容器） ---------- */
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-shell {
+  animation: pageIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---------- 8. 滚动条 / 选中色 / 焦点 ---------- */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--aurora-3) / 0.35),
+    hsl(var(--aurora-2) / 0.35)
+  );
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--aurora-3) / 0.6),
+    hsl(var(--aurora-2) / 0.6)
+  );
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::selection {
+  background: hsl(var(--aurora-3) / 0.28);
+}
+
+/* ---------- 9. 无障碍：尊重"减少动态"偏好 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-orb,
+  .text-aurora,
+  .card-modern::before,
+  .page-shell {
+    animation: none !important;
+    transition: none !important;
+  }
+  .glass-hover:hover,
+  .card-modern:hover {
+    transform: none;
+  }
 }

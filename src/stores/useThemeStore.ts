@@ -36,11 +36,11 @@ function applyTheme(theme: 'light' | 'dark') {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set, get) => {
-      const initialEffective = resolveTheme('system');
+      const initialEffective = resolveTheme('dark');
       applyTheme(initialEffective);
 
       return {
-        mode: 'system',
+        mode: 'dark',
         effectiveTheme: initialEffective,
         setMode: (mode) => {
           const effectiveTheme = resolveTheme(mode);

@@ -20,7 +20,7 @@ export default function WorkCard({ work, keyword }: WorkCardProps) {
 
   return (
     <Link to={`/works/${work.id}`}>
-      <Card className="card-ink-hover group h-full cursor-pointer transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/5">
+      <Card className="card-modern group h-full cursor-pointer">
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-2">
             <div>

@@ -27,7 +27,7 @@ export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-6 space-y-10 watermark-bg">
       {/* Hero Section with ink wash background */}
-      <section className="hero-ink-bg text-center py-12 md:py-16 rounded-xl relative overflow-hidden">
+      <section className="hero-ink-bg glass text-center py-14 md:py-20 rounded-2xl relative overflow-hidden">
         {/* Ink painting background image */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
@@ -46,7 +46,7 @@ export default function HomePage() {
             <span className="seal-stamp">诗</span>
           </div>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold text-primary poem-title mb-4 animate-fade-in-up stagger-2 shimmer-glow">
+        <h1 className="text-4xl md:text-5xl font-bold text-primary poem-title mb-4 animate-fade-in-up stagger-2 text-aurora">
           部编古诗文
         </h1>
         <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto animate-fade-in-up stagger-3">

@@ -18,7 +18,7 @@ export default function Header() {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 dark:bg-background/90">
+    <header className="glass-nav sticky top-0 z-40 w-full border-b">
       <div className="container mx-auto flex h-14 items-center px-4">
         {/* Logo */}
         <Link to="/" className="mr-6 flex items-center space-x-2 group">

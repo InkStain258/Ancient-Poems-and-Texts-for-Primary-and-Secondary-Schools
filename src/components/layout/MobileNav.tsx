@@ -14,7 +14,7 @@ export default function MobileNav() {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 dark:bg-background/90 md:hidden">
+    <nav className="glass-nav fixed bottom-0 left-0 right-0 z-40 border-t md:hidden">
       {/* Top ink gradient line */}
       <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
       <div className="flex items-center justify-around h-14">
