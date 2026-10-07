@@ -1,0 +1,1515 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+    --primary: 24 95% 30%;
+    --primary-foreground: 36 45% 95%;
+    --secondary: 30 10% 92%;
+    --secondary-foreground: 24 10% 20%;
+    --muted: 30 10% 92%;
+    --muted-foreground: 25 5% 45%;
+    --accent: 30 20% 90%;
+    --accent-foreground: 24 10% 20%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 9% 98%;
+    --border: 30 10% 85%;
+    --input: 30 10% 85%;
+    --ring: 24 95% 30%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14% 6%;
+    --foreground: 36 30% 92%;
+    --card: 20 14% 8%;
+    --card-foreground: 36 30% 92%;
+    --popover: 20 14% 8%;
+    --popover-foreground: 36 30% 92%;
+    --primary: 28 80% 55%;
+    --primary-foreground: 20 14% 6%;
+    --secondary: 20 14% 14%;
+    --secondary-foreground: 36 30% 92%;
+    --muted: 20 14% 14%;
+    --muted-foreground: 36 10% 55%;
+    --accent: 20 14% 18%;
+    --accent-foreground: 36 30% 92%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 60 9% 98%;
+    --border: 20 14% 18%;
+    --input: 20 14% 18%;
+    --ring: 28 80% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Chinese typography enhancements */
+.poem-text {
+  line-height: 2;
+  letter-spacing: 0.1em;
+}
+
+.poem-text-sm {
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+}
+
+.poem-title {
+  letter-spacing: 0.15em;
+}
+
+/* ===== Animations ===== */
+
+/* Page enter animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Ink spread animation */
+@keyframes inkSpread {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Subtle float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Gentle pulse for accent elements */
+@keyframes gentlePulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Brush stroke reveal */
+@keyframes brushReveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Stagger children animation utility */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out both;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out both;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-brush-reveal {
+  animation: brushReveal 0.8s ease-out both;
+}
+
+/* Stagger delay utilities */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+.stagger-7 { animation-delay: 0.35s; }
+.stagger-8 { animation-delay: 0.4s; }
+
+/* Hero section ink wash background */
+.hero-ink-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-ink-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, hsl(var(--primary) / 0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 30%, hsl(var(--primary) / 0.04) 0%, transparent 40%),
+              radial-gradient(ellipse at 50% 80%, hsl(var(--primary) / 0.03) 0%, transparent 45%);
+  animation: inkSpread 4s ease-out forwards;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-ink-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Card hover effect with ink-like border */
+.card-ink-hover {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.card-ink-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.3),
+              0 4px 12px hsl(var(--primary) / 0.1);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-ink-hover:hover::after {
+  opacity: 1;
+}
+
+.card-ink-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px hsl(var(--primary) / 0.08);
+}
+
+/* Decorative seal stamp */
+.seal-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid hsl(var(--destructive) / 0.8);
+  border-radius: 4px;
+  color: hsl(var(--destructive) / 0.9);
+  font-family: serif;
+  font-weight: bold;
+  font-size: 18px;
+  transform: rotate(-8deg);
+  opacity: 0.8;
+  user-select: none;
+}
+
+/* Ink wash divider */
+.ink-divider {
+  position: relative;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    hsl(var(--primary) / 0.3) 20%, 
+    hsl(var(--primary) / 0.5) 50%, 
+    hsl(var(--primary) / 0.3) 80%, 
+    transparent 100%
+  );
+  margin: 1.5rem 0;
+}
+
+/* Decorative corner for cards */
+.corner-decoration {
+  position: relative;
+}
+
+.corner-decoration::before,
+.corner-decoration::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: hsl(var(--primary) / 0.2);
+  pointer-events: none;
+}
+
+.corner-decoration::before {
+  top: 8px;
+  left: 8px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+  border-color: inherit;
+}
+
+.corner-decoration::after {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+  border-color: inherit;
+}
+
+/* Loading spinner with Chinese character */
+.loading-spinner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 2px solid hsl(var(--primary) / 0.2);
+  border-top-color: hsl(var(--primary));
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Tab underline animation */
+.tab-underline {
+  position: relative;
+}
+
+.tab-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: hsl(var(--primary));
+  transition: width 0.3s ease;
+}
+
+.tab-underline:hover::after,
+.tab-underline.active::after {
+  width: 100%;
+}
+
+/* Verse highlight effect */
+.verse-highlight {
+  background: linear-gradient(120deg, hsl(var(--primary) / 0.08) 0%, hsl(var(--primary) / 0.15) 100%);
+  border-left: 3px solid hsl(var(--primary));
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+/* Mountain silhouette for hero background */
+.mountain-silhouette {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+/* Theme badge colors */
+.theme-badge-爱国 { background-color: hsl(0 70% 85%); color: hsl(0 50% 30%); }
+.theme-badge-山水 { background-color: hsl(160 40% 88%); color: hsl(160 30% 30%); }
+.theme-badge-友情 { background-color: hsl(30 60% 88%); color: hsl(30 40% 30%); }
+.theme-badge-思乡 { background-color: hsl(220 40% 88%); color: hsl(220 30% 30%); }
+.theme-badge-哲理 { background-color: hsl(270 30% 88%); color: hsl(270 20% 30%); }
+.theme-badge-田园 { background-color: hsl(100 35% 88%); color: hsl(100 25% 30%); }
+.theme-badge-战争 { background-color: hsl(0 50% 82%); color: hsl(0 35% 30%); }
+.theme-badge-咏物 { background-color: hsl(40 45% 85%); color: hsl(40 30% 30%); }
+.theme-badge-咏史 { background-color: hsl(25 35% 85%); color: hsl(25 25% 30%); }
+.theme-badge-送别 { background-color: hsl(190 40% 88%); color: hsl(190 30% 30%); }
+.theme-badge-边塞 { background-color: hsl(35 45% 85%); color: hsl(35 30% 30%); }
+.theme-badge-闺怨 { background-color: hsl(330 35% 88%); color: hsl(330 25% 30%); }
+.theme-badge-节日 { background-color: hsl(45 60% 85%); color: hsl(45 40% 30%); }
+.theme-badge-人生 { background-color: hsl(200 35% 88%); color: hsl(200 25% 30%); }
+.theme-badge-爱情 { background-color: hsl(340 50% 88%); color: hsl(340 35% 30%); }
+
+.dark .theme-badge-爱国 { background-color: hsl(0 50% 20%); color: hsl(0 40% 75%); }
+.dark .theme-badge-山水 { background-color: hsl(160 30% 18%); color: hsl(160 25% 70%); }
+.dark .theme-badge-友情 { background-color: hsl(30 40% 18%); color: hsl(30 30% 70%); }
+.dark .theme-badge-思乡 { background-color: hsl(220 30% 18%); color: hsl(220 20% 70%); }
+.dark .theme-badge-哲理 { background-color: hsl(270 20% 18%); color: hsl(270 15% 70%); }
+.dark .theme-badge-田园 { background-color: hsl(100 25% 18%); color: hsl(100 18% 70%); }
+.dark .theme-badge-战争 { background-color: hsl(0 35% 20%); color: hsl(0 30% 70%); }
+.dark .theme-badge-咏物 { background-color: hsl(40 30% 18%); color: hsl(40 22% 70%); }
+.dark .theme-badge-咏史 { background-color: hsl(25 22% 18%); color: hsl(25 18% 70%); }
+.dark .theme-badge-送别 { background-color: hsl(190 28% 18%); color: hsl(190 22% 70%); }
+.dark .theme-badge-边塞 { background-color: hsl(35 30% 18%); color: hsl(35 22% 70%); }
+.dark .theme-badge-闺怨 { background-color: hsl(330 25% 18%); color: hsl(330 18% 70%); }
+.dark .theme-badge-节日 { background-color: hsl(45 40% 18%); color: hsl(45 30% 70%); }
+.dark .theme-badge-人生 { background-color: hsl(200 25% 18%); color: hsl(200 18% 70%); }
+.dark .theme-badge-爱情 { background-color: hsl(340 35% 18%); color: hsl(340 25% 70%); }
+
+/* ===== Additional Interactive Animations ===== */
+
+/* Ripple effect for clickable elements */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: hsl(var(--primary) / 0.2);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+
+.ripple-effect:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+/* Typewriter effect for poem text */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* Glow pulse for AI ball */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 5px hsl(var(--primary) / 0.3),
+                0 0 10px hsl(var(--primary) / 0.1);
+  }
+  50% {
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.5),
+                0 0 20px hsl(var(--primary) / 0.2);
+  }
+}
+
+.ai-ball-glow {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* Smooth page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Annotation highlight pulse */
+@keyframes annotationPulse {
+  0% { background-color: transparent; }
+  50% { background-color: hsl(var(--primary) / 0.15); }
+  100% { background-color: transparent; }
+}
+
+.annotation-highlight-pulse {
+  animation: annotationPulse 1s ease-out;
+}
+
+/* Card flip animation support */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Floating particle effect for hero */
+@keyframes floatParticle {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.hero-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: hsl(var(--primary) / 0.3);
+  pointer-events: none;
+  animation: floatParticle 6s ease-in-out infinite;
+}
+
+/* Tooltip animation */
+@keyframes tooltipAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Scroll reveal base class */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Enhanced Visual Decorations ===== */
+
+/* Shimmer effect for featured elements */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground)) 0%,
+    hsl(var(--primary)) 25%,
+    hsl(var(--foreground)) 50%,
+    hsl(var(--primary)) 75%,
+    hsl(var(--foreground)) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+/* Ink drop splash animation */
+@keyframes inkDrop {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+    border-radius: 50%;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+    border-radius: 30%;
+  }
+}
+
+.ink-drop::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  background: hsl(var(--primary) / 0.15);
+  animation: inkDrop 2s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Decorative ink wash blob (subtle background decoration) */
+.ink-wash-blob {
+  position: relative;
+  overflow: hidden;
+}
+
+.ink-wash-blob::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: radial-gradient(ellipse at 30% 40%, hsl(var(--primary) / 0.04) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 60%, hsl(var(--primary) / 0.03) 0%, transparent 40%),
+              radial-gradient(ellipse at 50% 80%, hsl(var(--primary) / 0.02) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ink-wash-blob > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Elegant card with gradient border */
+.elegant-card {
+  position: relative;
+  background: hsl(var(--card));
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.elegant-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.3), transparent 50%, hsl(var(--primary) / 0.15));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Scroll-driven parallax background */
+@keyframes parallaxSlow {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-30px); }
+}
+
+.parallax-bg {
+  animation: parallaxSlow 20s linear infinite alternate;
+}
+
+/* Brush stroke underline for headings */
+.brush-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.brush-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg,
+    hsl(var(--primary) / 0.8) 0%,
+    hsl(var(--primary) / 0.6) 40%,
+    hsl(var(--primary) / 0.2) 80%,
+    transparent 100%
+  );
+  border-radius: 2px;
+}
+
+/* Floating ink dots decoration */
+@keyframes inkDotFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-15px) scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+.ink-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(var(--primary) / 0.2);
+  pointer-events: none;
+  animation: inkDotFloat 4s ease-in-out infinite;
+}
+
+/* Poetry line decoration - side mark */
+.poem-line-mark {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.poem-line-mark::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg,
+    hsl(var(--primary) / 0.5),
+    hsl(var(--primary) / 0.1)
+  );
+  border-radius: 1px;
+}
+
+/* Hover glow for interactive elements */
+@keyframes hoverGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px hsl(var(--primary) / 0.1);
+  }
+  50% {
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.25);
+  }
+}
+
+.hover-glow:hover {
+  animation: hoverGlow 1.5s ease-in-out infinite;
+}
+
+/* Scroll indicator - bouncing arrow */
+@keyframes bounceDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.scroll-indicator {
+  animation: bounceDown 1.5s ease-in-out infinite;
+  opacity: 0.5;
+}
+
+/* Paper texture overlay for cards */
+.paper-texture {
+  position: relative;
+}
+
+.paper-texture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.paper-texture > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Decorative wave divider (alternative to ink-divider) */
+.wave-divider {
+  position: relative;
+  height: 30px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.wave-divider::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 25%,
+    hsl(var(--primary) / 0.15) 25%,
+    hsl(var(--primary) / 0.15) 50%
+  );
+  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,15 Q150,0 300,15 Q450,30 600,15 Q750,0 900,15 Q1050,30 1200,15 L1200,30 L0,30 Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,15 Q150,0 300,15 Q450,30 600,15 Q750,0 900,15 Q1050,30 1200,15 L1200,30 L0,30 Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: 50% 100%;
+  -webkit-mask-size: 50% 100%;
+  animation: waveSlide 8s linear infinite;
+}
+
+@keyframes waveSlide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Gentle breathing animation for subtle elements */
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Petal falling animation */
+@keyframes petalFall {
+  0% {
+    transform: translateY(-10px) rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(80px) rotate(360deg) translateX(30px);
+    opacity: 0;
+  }
+}
+
+.petal {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: hsl(var(--primary) / 0.2);
+  border-radius: 50% 0 50% 0;
+  pointer-events: none;
+  animation: petalFall 5s ease-in-out infinite;
+}
+
+/* ===== Light Mode Specific Decorations ===== */
+
+/* Light mode: subtle paper/warm tint for the whole page */
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) body {
+    background-image:
+      radial-gradient(ellipse at 20% 50%, hsl(30 40% 95% / 0.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, hsl(25 30% 96% / 0.4) 0%, transparent 40%);
+    background-attachment: fixed;
+  }
+}
+
+/* Light mode cards: warm paper-like background with subtle shadow */
+:root:not(.dark) .card,
+:root:not(.dark) [class*="Card"] {
+  box-shadow: 0 1px 3px hsl(24 20% 80% / 0.15),
+              0 4px 12px hsl(24 10% 85% / 0.08);
+}
+
+/* Dark mode cards: deeper shadows for depth */
+.dark .card,
+.dark [class*="Card"] {
+  box-shadow: 0 1px 3px hsl(0 0% 0% / 0.3),
+              0 4px 12px hsl(0 0% 0% / 0.2);
+}
+
+/* Light mode: warm gold accent for ink-divider */
+:root:not(.dark) .ink-divider {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    hsl(30 60% 70% / 0.4) 15%,
+    hsl(24 80% 55% / 0.6) 50%,
+    hsl(30 60% 70% / 0.4) 85%,
+    transparent 100%
+  );
+}
+
+/* Light mode: stronger seal stamp */
+:root:not(.dark) .seal-stamp {
+  border-color: hsl(0 70% 45%);
+  color: hsl(0 65% 42%);
+  background: hsl(0 80% 95% / 0.5);
+  box-shadow: 1px 1px 3px hsl(0 50% 60% / 0.2);
+}
+
+/* Light mode: warm verse highlight */
+:root:not(.dark) .verse-highlight {
+  background: linear-gradient(120deg, hsl(30 40% 95% / 0.8) 0%, hsl(25 50% 90% / 0.8) 100%);
+  border-left-color: hsl(24 80% 45%);
+}
+
+/* Light mode: visible paper texture */
+:root:not(.dark) .paper-texture::after {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b09060' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Light mode: stronger corner decoration */
+:root:not(.dark) .corner-decoration::before,
+:root:not(.dark) .corner-decoration::after {
+  border-color: hsl(24 60% 55% / 0.35) !important;
+}
+
+/* Light mode: visible mountain silhouette */
+:root:not(.dark) .mountain-silhouette {
+  opacity: 0.06;
+  color: hsl(24 40% 50%);
+}
+
+/* Light mode: elegant card gradient border more visible */
+:root:not(.dark) .elegant-card::before {
+  background: linear-gradient(135deg, hsl(24 70% 50% / 0.35), transparent 50%, hsl(24 50% 40% / 0.2));
+}
+
+/* Light mode: brush underline warmer */
+:root:not(.dark) .brush-underline::after {
+  height: 3px;
+  background: linear-gradient(90deg,
+    hsl(24 80% 45% / 0.9) 0%,
+    hsl(24 70% 50% / 0.6) 50%,
+    hsl(24 60% 55% / 0.2) 85%,
+    transparent 100%
+  );
+}
+
+/* Light mode: card hover effect warmer */
+:root:not(.dark) .card-ink-hover::after {
+  box-shadow: 0 0 0 2px hsl(24 60% 50% / 0.25),
+              0 4px 12px hsl(24 40% 60% / 0.1);
+}
+
+/* Light mode: ink-wash-blob more visible */
+:root:not(.dark) .ink-wash-blob::before {
+  background: radial-gradient(ellipse at 30% 40%, hsl(24 50% 85% / 0.15) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 60%, hsl(30 40% 88% / 0.1) 0%, transparent 40%),
+              radial-gradient(ellipse at 50% 80%, hsl(25 35% 90% / 0.08) 0%, transparent 45%);
+}
+
+/* Light mode: shimmer text more visible */
+:root:not(.dark) .shimmer-text {
+  background: linear-gradient(
+    90deg,
+    hsl(24 80% 30%) 0%,
+    hsl(24 90% 50%) 25%,
+    hsl(24 80% 30%) 50%,
+    hsl(30 80% 45%) 75%,
+    hsl(24 80% 30%) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+/* Light mode: wave divider warmer */
+:root:not(.dark) .wave-divider::before {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 25%,
+    hsl(24 60% 70% / 0.2) 25%,
+    hsl(24 60% 70% / 0.2) 50%
+  );
+}
+
+/* Light mode: petal warmer color */
+:root:not(.dark) .petal {
+  background: hsl(24 50% 60% / 0.25);
+}
+
+/* Decorative watermark pattern for light mode pages */
+:root:not(.dark) .watermark-bg {
+  position: relative;
+}
+
+:root:not(.dark) .watermark-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 25%, hsl(24 40% 88% / 0.3) 0%, transparent 25%),
+    radial-gradient(circle at 85% 75%, hsl(30 35% 90% / 0.25) 0%, transparent 20%),
+    radial-gradient(circle at 50% 10%, hsl(25 30% 92% / 0.2) 0%, transparent 30%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+:root:not(.dark) .watermark-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Light mode: floating ink dot warmer */
+:root:not(.dark) .ink-dot {
+  background: hsl(24 40% 65% / 0.25);
+}
+
+/* Light mode: hover glow warmer */
+:root:not(.dark) .hover-glow:hover {
+  animation: none;
+  box-shadow: 0 0 12px hsl(24 60% 55% / 0.2);
+}
+
+/* Dark mode: ink-dot brighter */
+.dark .ink-dot {
+  background: hsl(var(--primary) / 0.35);
+}
+
+/* Dark mode: verse highlight deeper */
+.dark .verse-highlight {
+  background: linear-gradient(120deg, hsl(var(--primary) / 0.15) 0%, hsl(var(--primary) / 0.25) 100%);
+  border-left-color: hsl(var(--primary) / 0.8);
+}
+
+/* Dark mode: ink-divider slightly brighter */
+.dark .ink-divider {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    hsl(var(--primary) / 0.4) 20%,
+    hsl(var(--primary) / 0.6) 50%,
+    hsl(var(--primary) / 0.4) 80%,
+    transparent 100%
+  );
+}
+
+/* Dark mode: elegant-card gradient border brighter */
+.dark .elegant-card::before {
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.4), transparent 50%, hsl(var(--primary) / 0.2));
+}
+
+/* Dark mode: brush underline more visible */
+.dark .brush-underline::after {
+  height: 3px;
+  background: linear-gradient(90deg,
+    hsl(var(--primary) / 0.9) 0%,
+    hsl(var(--primary) / 0.6) 50%,
+    hsl(var(--primary) / 0.2) 85%,
+    transparent 100%
+  );
+}
+
+/* Dark mode: petal brighter */
+.dark .petal {
+  background: hsl(var(--primary) / 0.3);
+}
+
+/* Dark mode: corner decoration visible */
+.dark .corner-decoration::before,
+.dark .corner-decoration::after {
+  border-color: hsl(var(--primary) / 0.3) !important;
+}
+
+/* Dark mode: paper texture subtle */
+.dark .paper-texture::after {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.01'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ===== Dynamic Light Effects ===== */
+
+/* 1. Shimmer Glow - flowing light sweep effect for card titles */
+@keyframes shimmerGlow {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer-glow {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground)) 0%,
+    hsl(var(--primary) / 0.8) 15%,
+    hsl(var(--foreground)) 30%,
+    hsl(var(--primary) / 0.6) 50%,
+    hsl(var(--foreground)) 70%,
+    hsl(var(--primary) / 0.8) 85%,
+    hsl(var(--foreground)) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerGlow 6s ease-in-out infinite;
+}
+
+:root:not(.dark) .shimmer-glow {
+  background: linear-gradient(
+    90deg,
+    hsl(24 80% 30%) 0%,
+    hsl(24 90% 55% / 0.9) 15%,
+    hsl(24 80% 30%) 30%,
+    hsl(30 85% 50% / 0.7) 50%,
+    hsl(24 80% 30%) 70%,
+    hsl(24 90% 55% / 0.9) 85%,
+    hsl(24 80% 30%) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerGlow 6s ease-in-out infinite;
+}
+
+/* 2. Breathing Glow - soft halo breathing animation */
+@keyframes breathingGlow {
+  0%, 100% {
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.15),
+                0 0 16px hsl(var(--primary) / 0.05);
+  }
+  50% {
+    box-shadow: 0 0 16px hsl(var(--primary) / 0.3),
+                0 0 32px hsl(var(--primary) / 0.1),
+                0 0 48px hsl(var(--primary) / 0.05);
+  }
+}
+
+.breathing-glow {
+  animation: breathingGlow 3s ease-in-out infinite;
+}
+
+:root:not(.dark) .breathing-glow {
+  animation: breathingGlowLight 3s ease-in-out infinite;
+}
+
+@keyframes breathingGlowLight {
+  0%, 100% {
+    box-shadow: 0 0 8px hsl(24 60% 55% / 0.15),
+                0 0 16px hsl(24 50% 60% / 0.05);
+  }
+  50% {
+    box-shadow: 0 0 16px hsl(24 60% 55% / 0.3),
+                0 0 32px hsl(24 50% 60% / 0.1),
+                0 0 48px hsl(24 40% 65% / 0.05);
+  }
+}
+
+/* 3. Ink Glow - ink-style expanding light effect */
+@keyframes inkGlowExpand {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+    filter: blur(8px);
+  }
+  30% {
+    opacity: 0.3;
+    filter: blur(4px);
+  }
+  60% {
+    opacity: 0.15;
+    filter: blur(12px);
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+    filter: blur(20px);
+  }
+}
+
+.ink-glow {
+  position: relative;
+}
+
+.ink-glow::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    hsl(var(--primary) / 0.2) 0%,
+    hsl(var(--primary) / 0.05) 40%,
+    transparent 70%
+  );
+  animation: inkGlowExpand 4s ease-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+:root:not(.dark) .ink-glow::before {
+  background: radial-gradient(
+    circle at center,
+    hsl(24 60% 55% / 0.2) 0%,
+    hsl(24 50% 60% / 0.05) 40%,
+    transparent 70%
+  );
+}
+
+/* 4. Star Twinkle - subtle star-point twinkling */
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.star-twinkle {
+  position: relative;
+}
+
+.star-twinkle::before,
+.star-twinkle::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: hsl(var(--primary) / 0.6);
+  pointer-events: none;
+  animation: starTwinkle 2s ease-in-out infinite;
+}
+
+.star-twinkle::before {
+  top: 10%;
+  right: 15%;
+  animation-delay: 0s;
+}
+
+.star-twinkle::after {
+  top: 30%;
+  right: 8%;
+  width: 3px;
+  height: 3px;
+  animation-delay: 0.7s;
+  animation-duration: 2.5s;
+}
+
+/* Star twinkle elements for dark mode with brighter stars */
+.dark .star-twinkle::before,
+.dark .star-twinkle::after {
+  background: hsl(var(--primary) / 0.8);
+  box-shadow: 0 0 4px hsl(var(--primary) / 0.4),
+              0 0 8px hsl(var(--primary) / 0.2);
+}
+
+/* 5. Floating Ribbon - slowly drifting light ribbon effect */
+@keyframes floatingRibbon {
+  0% {
+    transform: translateX(-10%) rotate(-2deg) scaleY(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(0%) rotate(0deg) scaleY(1.1);
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(10%) rotate(2deg) scaleY(1);
+    opacity: 0;
+  }
+}
+
+.floating-ribbon {
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-ribbon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -20%;
+  width: 140%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--primary) / 0.3) 15%,
+    hsl(var(--primary) / 0.6) 30%,
+    hsl(var(--primary) / 0.8) 50%,
+    hsl(var(--primary) / 0.6) 70%,
+    hsl(var(--primary) / 0.3) 85%,
+    transparent 100%
+  );
+  animation: floatingRibbon 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.floating-ribbon::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  width: 120%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--primary) / 0.2) 20%,
+    hsl(var(--primary) / 0.4) 50%,
+    hsl(var(--primary) / 0.2) 80%,
+    transparent 100%
+  );
+  animation: floatingRibbon 10s ease-in-out infinite;
+  animation-delay: 3s;
+  pointer-events: none;
+}
+
+:root:not(.dark) .floating-ribbon::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(24 60% 55% / 0.3) 15%,
+    hsl(24 70% 50% / 0.6) 30%,
+    hsl(30 65% 45% / 0.8) 50%,
+    hsl(24 70% 50% / 0.6) 70%,
+    hsl(24 60% 55% / 0.3) 85%,
+    transparent 100%
+  );
+}
+
+:root:not(.dark) .floating-ribbon::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(24 50% 60% / 0.2) 20%,
+    hsl(24 55% 55% / 0.4) 50%,
+    hsl(24 50% 60% / 0.2) 80%,
+    transparent 100%
+  );
+}
+
+/* ===== Scroll Reveal Animation ===== */
+@keyframes scrollRevealUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-reveal-animated {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-animated.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== AI Floating Ball extras ===== */
+
+/* Blink cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* AI Panel enter animation – spring bounce */
+@keyframes ai-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.93);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Message bubble enter */
+@keyframes ai-msg-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.ai-msg-enter {
+  animation: ai-msg-enter 0.22s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+/* AI fade in */
+@keyframes ai-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ai-fade-in {
+  animation: ai-fade-in 0.2s ease-out both;
+}
+
+/* Floating ball outer ring expand */
+@keyframes ai-ring-expand {
+  0%   { transform: scale(1);   opacity: 0.5; }
+  70%  { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Ball glow ring radial pulse */
+@keyframes ai-glow-ring {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.15); }
+}
+
+/* Slow spin for empty-state icon ring */
+@keyframes ai-ring-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Particle orbit animations (6 particles) */
+@keyframes orbit-particle-0 {
+  from { transform: rotate(0deg)   translate(28px) scale(1);   opacity: 0.7; }
+  50%  { opacity: 0.3; }
+  to   { transform: rotate(360deg) translate(28px) scale(0.6); opacity: 0.7; }
+}
+@keyframes orbit-particle-1 {
+  from { transform: rotate(60deg)  translate(24px) scale(0.8); opacity: 0.5; }
+  50%  { opacity: 0.8; }
+  to   { transform: rotate(420deg) translate(24px) scale(1);   opacity: 0.5; }
+}
+@keyframes orbit-particle-2 {
+  from { transform: rotate(120deg) translate(30px) scale(1);   opacity: 0.6; }
+  50%  { opacity: 0.2; }
+  to   { transform: rotate(480deg) translate(30px) scale(0.7); opacity: 0.6; }
+}
+@keyframes orbit-particle-3 {
+  from { transform: rotate(180deg) translate(22px) scale(0.7); opacity: 0.8; }
+  50%  { opacity: 0.4; }
+  to   { transform: rotate(540deg) translate(22px) scale(1);   opacity: 0.8; }
+}
+@keyframes orbit-particle-4 {
+  from { transform: rotate(240deg) translate(26px) scale(1);   opacity: 0.4; }
+  50%  { opacity: 0.7; }
+  to   { transform: rotate(600deg) translate(26px) scale(0.8); opacity: 0.4; }
+}
+@keyframes orbit-particle-5 {
+  from { transform: rotate(300deg) translate(32px) scale(0.9); opacity: 0.6; }
+  50%  { opacity: 0.3; }
+  to   { transform: rotate(660deg) translate(32px) scale(1);   opacity: 0.6; }
+}
+
+/* Scrollbar */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 2px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}
+
+/* Markdown styles */
+.ai-markdown p + p {
+  margin-top: 0.25rem;
+}
+.ai-markdown ul,
+.ai-markdown ol {
+  padding-left: 0.25rem;
+}
+
+/* ===== Search Highlight ===== */
+mark.search-highlight {
+  background: hsl(40 80% 60% / 0.35);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.dark mark.search-highlight {
+  background: hsl(var(--primary) / 0.35);
+}
+
+:root:not(.dark) mark.search-highlight {
+  background: hsl(40 85% 65% / 0.4);
+}
