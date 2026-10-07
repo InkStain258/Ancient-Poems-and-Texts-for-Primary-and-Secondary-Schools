@@ -26,6 +26,40 @@ echarts.use([
   CanvasRenderer,
 ]);
 
+/* ─── 极光图表主题（与全站玻璃拟态 × 极光视觉统一） ─── */
+const AURORA_LIGHT = [
+  '#c2410c', '#0e7490', '#7c3aed', '#b45309',
+  '#0f766e', '#be185d', '#4d7c0f', '#1d4ed8',
+];
+const AURORA_DARK = [
+  '#fb923c', '#22d3ee', '#a78bfa', '#fbbf24',
+  '#2dd4bf', '#f472b6', '#a3e635', '#60a5fa',
+];
+
+echarts.registerTheme('bbc-light', {
+  color: AURORA_LIGHT,
+  backgroundColor: 'transparent',
+  textStyle: { fontFamily: '"Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif' },
+  legend: { textStyle: { color: '#57534e' } },
+});
+
+echarts.registerTheme('bbc-dark', {
+  color: AURORA_DARK,
+  backgroundColor: 'transparent',
+  textStyle: { fontFamily: '"Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif' },
+  legend: { textStyle: { color: '#a8a29e' } },
+  categoryAxis: {
+    axisLine: { lineStyle: { color: '#3f3f46' } },
+    axisLabel: { color: '#a8a29e' },
+    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
+  },
+  valueAxis: {
+    axisLine: { lineStyle: { color: '#3f3f46' } },
+    axisLabel: { color: '#a8a29e' },
+    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
+  },
+});
+
 interface EChartsBaseProps {
   option: Record<string, unknown>;
   height?: string;
@@ -38,7 +72,7 @@ export default function EChartsBase({ option, height = '300px', className }: ECh
   const { effectiveTheme } = useThemeStore();
 
   const getEchartsTheme = useCallback(() => {
-    return effectiveTheme === 'dark' ? 'dark' : undefined;
+    return effectiveTheme === 'dark' ? 'bbc-dark' : 'bbc-light';
   }, [effectiveTheme]);
 
   useEffect(() => {

@@ -318,29 +318,34 @@ export function buildGraphOption(nodes: GraphNode[], edges: GraphEdge[]) {
 
   const echartsNodes = nodes.map((n) => {
     const color = activeColors[n.type] || '#8B4513';
+    const nodeSize = n.size || 15;
+    // 按节点类型分层布置标签：作者悬顶、朝代嵌环内、作品/主题居右，降低密集图遮挡
+    const labelPos: 'top' | 'right' | 'inside' =
+      n.type === 'author' ? 'top' : n.type === 'dynasty' ? 'inside' : 'right';
     return {
       id: n.id,
       name: n.name,
-      symbolSize: n.size || 15,
+      symbolSize: nodeSize,
+      value: nodeSize,
       itemStyle: {
         color,
-        borderColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)',
-        borderWidth: n.type === 'author' ? 2 : 1,
-        shadowBlur: n.type === 'author' ? 8 : 4,
-        shadowColor: isDark ? `${color}66` : `${color}33`,
+        borderColor: isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.08)',
+        borderWidth: n.type === 'author' ? 2.5 : n.type === 'dynasty' ? 2 : 1,
+        shadowBlur: n.type === 'author' ? 14 : n.type === 'dynasty' ? 10 : 5,
+        shadowColor: isDark ? `${color}88` : `${color}44`,
       },
       label: {
         show: true,
-        fontSize: n.type === 'author' ? 13 : n.type === 'dynasty' ? 14 : 11,
+        fontSize: n.type === 'dynasty' ? 13 : Math.min(10 + nodeSize / 6, 14),
         fontWeight: n.type === 'author' || n.type === 'dynasty' ? 'bold' : 'normal',
-        color: labelColor,
-        position: 'right' as const,
+        color: n.type === 'dynasty' ? '#fff' : labelColor,
+        position: labelPos,
       },
       category: ['author', 'work', 'theme', 'dynasty'].indexOf(n.type),
     };
   });
 
-  const echartsEdges = edges.map((e) => {
+  const echartsEdges = edges.map((e, i) => {
     const lineColor = edgeColors[e.relation] || '#888';
     return {
       source: e.source,
@@ -348,9 +353,10 @@ export function buildGraphOption(nodes: GraphNode[], edges: GraphEdge[]) {
       lineStyle: {
         color: isDark ? `${lineColor}AA` : lineColor,
         width: e.relation === '创作' ? 2 : 1,
-        type: e.relation === '创作' ? 'solid' as const : 'dashed' as const,
-        curveness: 0.2,
-        opacity: e.relation === '创作' ? 0.6 : 0.35,
+        type: e.relation === '创作' ? ('solid' as const) : ('dashed' as const),
+        // 曲率按序微错开，减少平行边重叠
+        curveness: 0.15 + (i % 5) * 0.04,
+        opacity: e.relation === '创作' ? 0.65 : 0.35,
       },
       value: e.relation,
     };
@@ -371,7 +377,7 @@ export function buildGraphOption(nodes: GraphNode[], edges: GraphEdge[]) {
       backgroundColor: isDark ? 'rgba(30,30,30,0.9)' : 'rgba(255,255,255,0.95)',
       borderColor: isDark ? '#555' : '#ddd',
       textStyle: { color: isDark ? '#eee' : '#333', fontSize: 13 },
-      formatter: (params: { dataType?: string; name?: string; value?: string; data?: { source?: string; target?: string; category?: number } }) => {
+      formatter: (params: { dataType?: string; name?: string; value?: string; data?: { source?: string; target?: string; category?: number; size?: number } }) => {
         if (params.dataType === 'edge') {
           const value = params.value || '';
           const srcName = nodeNameMap[params.data?.source || ''] || '';
@@ -383,7 +389,13 @@ export function buildGraphOption(nodes: GraphNode[], edges: GraphEdge[]) {
         const typeKey = ['author', 'work', 'theme', 'dynasty'][nodeType ?? -1];
         const typeLabel = typeKey ? typeNames[typeKey] : '';
         const dotColor = typeKey ? activeColors[typeKey] : '#888';
-        return `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${dotColor};margin-right:6px;vertical-align:middle;"></span><b>${name}</b><br/><span style="color:${isDark ? '#aaa' : '#888'}">类型：${typeLabel}</span>`;
+        // 作者/朝代/主题节点展示关联作品数（work 节点的 size 仅为视觉尺寸，不展示）
+        const relCount = (params.data as { size?: number } | undefined)?.size;
+        const relLine =
+          typeKey && typeKey !== 'work' && relCount
+            ? `<br/><span style="color:${isDark ? '#aaa' : '#888'}">关联 ${relCount} 篇作品</span>`
+            : '';
+        return `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${dotColor};margin-right:6px;vertical-align:middle;"></span><b>${name}</b><br/><span style="color:${isDark ? '#aaa' : '#888'}">类型：${typeLabel}</span>${relLine}`;
       },
     },
     legend: {
@@ -394,8 +406,10 @@ export function buildGraphOption(nodes: GraphNode[], edges: GraphEdge[]) {
       itemHeight: 14,
       itemGap: 16,
     },
-    animationDuration: 1500,
-    animationEasingUpdate: 'quinticInOut',
+    animationDuration: 1200,
+    animationEasing: 'cubicOut' as const,
+    animationEasingUpdate: 'quinticInOut' as const,
+    animationDelay: (idx: number) => idx * 8,
     series: [{
       type: 'graph' as const,
       layout: 'force' as const,
@@ -411,15 +425,17 @@ export function buildGraphOption(nodes: GraphNode[], edges: GraphEdge[]) {
         color: labelColor,
       },
       force: {
-        repulsion: 400,
-        gravity: 0.1,
-        edgeLength: [80, 200],
+        // 斥力随节点规模自适应：密集图不挤压、稀疏图不涣散
+        repulsion: Math.max(320, Math.min(nodes.length * 14, 1000)),
+        gravity: 0.12,
+        edgeLength: [60, 180],
         friction: 0.6,
         layoutAnimation: true,
       },
       emphasis: {
         focus: 'adjacency' as const,
-        lineStyle: { width: 3 },
+        lineStyle: { width: 3, opacity: 1 },
+        itemStyle: { shadowBlur: 20 },
         label: { fontSize: 14, fontWeight: 'bold' as const },
       },
       edgeLabel: {

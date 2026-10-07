@@ -6,6 +6,7 @@ import {
   TooltipComponent,
   VisualMapComponent,
   TitleComponent,
+  LegendComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { useThemeStore } from '@/stores/useThemeStore';
@@ -21,6 +22,7 @@ echarts.use([
   TooltipComponent,
   VisualMapComponent,
   TitleComponent,
+  LegendComponent,
   CanvasRenderer,
 ]);
 
@@ -51,7 +53,7 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
       instanceRef.current = null;
     }
 
-    const chart = echarts.init(chartRef.current, isDark ? 'dark' : undefined);
+    const chart = echarts.init(chartRef.current, isDark ? 'bbc-dark' : 'bbc-light');
     instanceRef.current = chart;
 
     // Filter journeys
@@ -61,6 +63,24 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
 
     // Get all unique cities with their coordinates
     const allCities = getCityCoordinates();
+
+    // 城市到访统计 → 节点分级与枢纽识别
+    const cityVisitCount: Record<string, number> = {};
+    journeys.forEach((j) =>
+      j.route.forEach((r) => {
+        if (r && r.name) cityVisitCount[r.name] = (cityVisitCount[r.name] || 0) + 1;
+      })
+    );
+    // 枢纽城市：路线端点 或 ≥2 位作者到访
+    const hubCities = new Set<string>();
+    journeys.forEach((j) => {
+      if (j.route[0]?.name) hubCities.add(j.route[0].name);
+      const last = j.route[j.route.length - 1];
+      if (last?.name) hubCities.add(last.name);
+      j.route.forEach((r) => {
+        if (r && r.name && (cityVisitCount[r.name] || 0) >= 2) hubCities.add(r.name);
+      });
+    });
 
     // Color palette for different authors
     const authorColors = [
@@ -93,6 +113,7 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
 
       linesSeries.push({
         type: 'lines',
+        name: journey.author,
         coordinateSystem: 'geo',
         zlevel: 2,
         effect: {
@@ -113,15 +134,20 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
       });
 
       // Build route point scatter for this author (with safety check)
+      // 节点分级：到访作者越多 / 行迹站位越靠前，圆点越大
       const authorCities = journey.route
         .filter(city => city && city.name)
-        .map(city => ({
+        .map((city, i) => ({
           name: city.name,
           value: [city.lng, city.lat],
+          author: journey.author,
+          order: i + 1,
+          symbolSize: 8 + (cityVisitCount[city.name] || 1) * 2,
         }));
 
       scatterSeries.push({
         type: 'scatter',
+        name: journey.author,
         coordinateSystem: 'geo',
         zlevel: 3,
         symbol: 'circle',
@@ -130,6 +156,8 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
           color,
           borderColor: '#fff',
           borderWidth: 1.5,
+          shadowBlur: 6,
+          shadowColor: `${color}66`,
         },
         label: {
           show: true,
@@ -141,6 +169,11 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
         data: authorCities,
       });
     });
+
+    // 枢纽城市（路线端点或 ≥2 位作者到访）→ 涟漪呼吸动画
+    const hubPoints = allCities
+      .filter(c => hubCities.has(c.name))
+      .map(c => ({ name: c.name, value: c.value }));
 
     // All cities as background markers
     const journeyCityNames = new Set<string>();
@@ -167,20 +200,35 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
           overflow: 'break',
         },
       },
+      // 作者图例：点击可显隐对应行迹
+      legend: {
+        data: journeys.map(j => j.author),
+        bottom: 8,
+        type: 'scroll',
+        textStyle: { color: isDark ? '#ccc' : '#555', fontSize: 12 },
+        itemWidth: 14,
+        itemHeight: 10,
+        icon: 'roundRect',
+      },
       tooltip: {
         trigger: 'item',
         backgroundColor: isDark ? 'rgba(20,20,30,0.9)' : 'rgba(255,255,255,0.95)',
         borderColor: isDark ? '#333' : '#eee',
         textStyle: { color: isDark ? '#ddd' : '#333' },
         formatter: (params: Record<string, unknown>) => {
-          const d = params.data as Record<string, unknown> | undefined;
+          const d = params.data as
+            | { fromName?: string; toName?: string; author?: string; order?: number }
+            | undefined;
           if (!d) return '';
           if (params.seriesType === 'lines') {
-            return `${d.fromName} → ${d.toName}`;
+            return `<b>${d.fromName} → ${d.toName}</b><br/><span style="color:${isDark ? '#aaa' : '#888'}">${params.seriesName ?? ''} 行迹</span>`;
           }
           const cityInfo = allCities.find(c => c.name === params.name);
+          const station = d.author
+            ? `<br/><span style="color:${isDark ? '#aaa' : '#888'}">${d.author} 行迹第 ${d.order} 站</span>`
+            : '';
           return cityInfo
-            ? `<b>${cityInfo.name}</b>${cityInfo.desc ? '<br/>' + cityInfo.desc : ''}`
+            ? `<b>${cityInfo.name}</b>${cityInfo.desc ? '<br/>' + cityInfo.desc : ''}${station}`
             : params.name;
         },
       },
@@ -191,13 +239,15 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
         center: [107, 34],
         label: { show: false },
         itemStyle: {
-          areaColor: isDark ? '#1a1a2e' : '#f5f0e8',
-          borderColor: isDark ? '#333' : '#c9b99a',
+          areaColor: isDark ? '#101625' : '#f2ecdd',
+          borderColor: isDark ? 'rgba(148,163,184,0.22)' : '#c9b99a',
           borderWidth: 0.8,
+          shadowColor: isDark ? 'rgba(0,0,0,0.45)' : 'rgba(180,160,120,0.35)',
+          shadowBlur: 8,
         },
         emphasis: {
           itemStyle: {
-            areaColor: isDark ? '#2a2a3e' : '#ede5d5',
+            areaColor: isDark ? '#1c2740' : '#ede5d5',
           },
           label: {
             show: true,
@@ -228,6 +278,28 @@ export default function AuthorJourneyMap({ height = '500px', author }: AuthorJou
             name: c.name,
             value: c.value,
           })),
+        },
+        // 枢纽城市涟漪层
+        {
+          type: 'effectScatter',
+          coordinateSystem: 'geo',
+          zlevel: 4,
+          symbolSize: 12,
+          rippleEffect: { brushType: 'stroke' as const, scale: 2.6, period: 4 },
+          itemStyle: {
+            color: isDark ? '#fbbf24' : '#d97706',
+            shadowBlur: 10,
+            shadowColor: 'rgba(251,191,36,0.5)',
+          },
+          label: {
+            show: true,
+            formatter: '{b}',
+            position: 'top',
+            fontSize: 11,
+            fontWeight: 'bold' as const,
+            color: isDark ? '#fde68a' : '#92400e',
+          },
+          data: hubPoints,
         },
         ...linesSeries,
         ...scatterSeries,

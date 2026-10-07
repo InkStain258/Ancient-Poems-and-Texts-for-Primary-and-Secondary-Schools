@@ -28,7 +28,7 @@ export default function StatsPage() {
         <div className="ink-dot absolute top-4 left-8 opacity-20" />
         <div className="ink-dot absolute bottom-3 right-6 opacity-25" />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
-          <h1 className="text-3xl font-bold poem-title brush-underline pb-1">数据统计</h1>
+          <h1 className="text-3xl font-bold poem-title text-aurora">数据统计</h1>
           <p className="text-sm text-muted-foreground mt-2 verse-highlight inline-block px-3 py-1">以数据之眼，观诗文万象</p>
         </div>
       </div>
@@ -45,7 +45,7 @@ export default function StatsPage() {
         ].map((item, i) => (
           <div
             key={item.label}
-            className="animate-fade-in-up elegant-card"
+            className="animate-fade-in-up card-modern"
             style={{ animationDelay: `${i * 60}ms` }}
           >
             <Card className="border-0 shadow-none bg-transparent hover:bg-primary/5 transition-colors duration-200">
@@ -67,7 +67,7 @@ export default function StatsPage() {
           { label: '最常见主题', value: `${stats.topTheme.name} (${stats.topTheme.count}篇)`, icon: '🌟' },
           { label: '诗文/文言文', value: `${stats.poetryCount} : ${stats.proseCount}`, icon: '📚' },
         ].map((item) => (
-          <div key={item.label} className="elegant-card">
+          <div key={item.label} className="card-modern">
             <Card className="border-0 shadow-none bg-transparent hover:bg-primary/5 transition-colors duration-200">
               <CardContent className="p-3">
                 <div className="flex items-start gap-2">
@@ -85,7 +85,7 @@ export default function StatsPage() {
 
       {/* ── Char stats mini cards ── */}
       <div className="grid grid-cols-3 gap-3 animate-fade-in-up stagger-2">
-        <div className="elegant-card">
+        <div className="card-modern">
           <Card className="border-0 shadow-none bg-transparent">
             <CardContent className="p-3 text-center">
               <p className="text-xs text-muted-foreground">篇均字数</p>
@@ -93,7 +93,7 @@ export default function StatsPage() {
             </CardContent>
           </Card>
         </div>
-        <div className="elegant-card">
+        <div className="card-modern">
           <Card className="border-0 shadow-none bg-transparent">
             <CardContent className="p-3 text-center">
               <p className="text-xs text-muted-foreground">最长篇目</p>
@@ -103,7 +103,7 @@ export default function StatsPage() {
             </CardContent>
           </Card>
         </div>
-        <div className="elegant-card">
+        <div className="card-modern">
           <Card className="border-0 shadow-none bg-transparent">
             <CardContent className="p-3 text-center">
               <p className="text-xs text-muted-foreground">最短篇目</p>
@@ -117,7 +117,7 @@ export default function StatsPage() {
 
       {/* ── Distribution charts row 1 ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up stagger-3">
-        <Card className="elegant-card">
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="text-lg brush-underline pb-1 inline-block">朝代分布</CardTitle>
           </CardHeader>
@@ -125,7 +125,7 @@ export default function StatsPage() {
             <DynastyDistChart />
           </CardContent>
         </Card>
-        <Card className="elegant-card">
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="text-lg brush-underline pb-1 inline-block">学段分布</CardTitle>
           </CardHeader>
@@ -137,7 +137,7 @@ export default function StatsPage() {
 
       {/* ── Distribution charts row 2 ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up stagger-4">
-        <Card className="elegant-card">
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="text-lg brush-underline pb-1 inline-block">主题分布</CardTitle>
           </CardHeader>
@@ -145,7 +145,7 @@ export default function StatsPage() {
             <ThemeDistChart />
           </CardContent>
         </Card>
-        <Card className="elegant-card">
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="text-lg brush-underline pb-1 inline-block">文体分布</CardTitle>
           </CardHeader>
@@ -157,7 +157,7 @@ export default function StatsPage() {
 
       {/* ── Author TOP 10 + Char count dist ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up stagger-5">
-        <Card className="elegant-card">
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="text-lg brush-underline pb-1 inline-block">作者产量 TOP 10</CardTitle>
           </CardHeader>
@@ -165,7 +165,7 @@ export default function StatsPage() {
             <AuthorTopChart />
           </CardContent>
         </Card>
-        <Card className="elegant-card">
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="text-lg brush-underline pb-1 inline-block">字数分布</CardTitle>
           </CardHeader>
@@ -176,7 +176,7 @@ export default function StatsPage() {
       </div>
 
       {/* ── Dynasty × Stage heatmap ── */}
-      <Card className="elegant-card animate-fade-in-up stagger-6">
+      <Card className="card-modern animate-fade-in-up stagger-6">
         <CardHeader>
           <CardTitle className="text-lg brush-underline pb-1 inline-block">朝代 × 学段热力图</CardTitle>
         </CardHeader>
@@ -189,7 +189,7 @@ export default function StatsPage() {
       </Card>
 
       {/* ── Author ranking table ── */}
-      <Card className="elegant-card animate-fade-in-up stagger-7">
+      <Card className="card-modern animate-fade-in-up stagger-7">
         <CardHeader>
           <CardTitle className="text-lg brush-underline pb-1 inline-block">作者排行榜</CardTitle>
         </CardHeader>
@@ -212,11 +212,17 @@ export default function StatsPage() {
                     className="border-b border-muted/50 hover:bg-muted/30 transition-colors"
                   >
                     <td className="py-2 px-3">
-                      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${
-                        i < 3
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted text-muted-foreground'
-                      }`}>
+                      <span
+                        className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${
+                          i === 0
+                            ? 'bg-amber-400 text-amber-950 shadow-[0_0_10px_rgba(251,191,36,0.5)]'
+                            : i === 1
+                              ? 'bg-slate-300 text-slate-700'
+                              : i === 2
+                                ? 'bg-orange-700/90 text-orange-50'
+                                : 'bg-muted text-muted-foreground'
+                        }`}
+                      >
                         {i + 1}
                       </span>
                     </td>
@@ -242,14 +248,15 @@ export default function StatsPage() {
       </Card>
 
       {/* ── Relationship network ── */}
-      <Card className="elegant-card animate-fade-in-up stagger-8">
+      <Card className="card-modern animate-fade-in-up stagger-8">
         <CardHeader>
           <CardTitle className="text-lg brush-underline pb-1 inline-block">诗文关系网络</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-3">
-            展示作者、作品、朝代、主题之间的关系。
-            <span className="hidden md:inline"> 节点越大代表相关作品越多，可拖拽和缩放查看。</span>
+            展示作者、作品、朝代、主题之间的关联网络。节点大小代表关联作品数，作者名标签悬于节点上方、
+            朝代嵌于色环之内；创作关系为实线、同主题/同朝代为虚线（曲率错开防重叠）。
+            <span className="hidden md:inline"> 悬停高亮相邻节点并显示关联篇数，可拖拽节点、缩放画布。</span>
             <span className="inline"> 🟢作者 🟠作品 🟡主题 🔴朝代</span>
           </p>
           <RelationGraph height="500px" />
@@ -257,13 +264,15 @@ export default function StatsPage() {
       </Card>
 
       {/* ── Author journey map ── */}
-      <Card className="elegant-card animate-fade-in-up stagger-9">
+      <Card className="card-modern animate-fade-in-up stagger-9">
         <CardHeader>
           <CardTitle className="text-lg poem-title brush-underline pb-1">文学行迹图</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-3">
-            展示教材中主要文学家的行迹路线，不同颜色代表不同作者。可拖拽和缩放查看。
+            展示教材中主要文学家的行迹路线，不同颜色代表不同作者。路线端点与多位作者到访的枢纽城市
+            以金色涟漪标注，节点大小随到访次数分级；悬停查看城市典故与行迹站位，底部图例可点击显隐作者。
+            <span className="hidden md:inline"> 可拖拽和缩放查看。</span>
           </p>
           <AuthorJourneyMap height="550px" />
         </CardContent>
