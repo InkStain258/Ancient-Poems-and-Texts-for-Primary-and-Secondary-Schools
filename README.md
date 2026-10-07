@@ -4,8 +4,9 @@
 
 **千年文脉，触手可及**
 
-_287 篇部编版古诗文的全量数字化收录 · 多维可视化 · 水墨美学 · AI 赋能_
+_319 篇部编版古诗文的全量数字化收录 · 多维可视化 · 水墨 × 极光美学 · AI 赋能_
 
+[![Release](https://img.shields.io/github/v/release/InkStain258/Ancient-Poems-and-Texts-for-Primary-and-Secondary-Schools?logo=github)](https://github.com/InkStain258/Ancient-Poems-and-Texts-for-Primary-and-Secondary-Schools/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org)
@@ -27,8 +28,8 @@ _287 篇部编版古诗文的全量数字化收录 · 多维可视化 · 水墨�
 
 | 维度 | 数据 | 说明 |
 |:----:|:----:|------|
-| 📜 诗文总量 | **287 篇** | 小学 122 + 初中 97 + 高中 68 |
-| ✍️ 历代作者 | **125 位** | 横跨先秦至清代，9 个朝代 |
+| 📜 诗文总量 | **319 篇** | 小学 129 + 初中 122 + 高中 68（对照 2024 修订版教材全量校勘） |
+| ✍️ 历代作者 | **135 位** | 横跨先秦至近现代，9 个时代 |
 | 🏷️ 主题分类 | **15 种** | 爱国/山水/友情/思乡/哲理/田园/战争/咏物/咏史/送别/边塞/闺怨/节日/人生/爱情 |
 | 📖 文学常识 | **242 张卡片** | 13 大分类，翻转学习 |
 | 🖌️ 水墨名句 | **360 条** | 10 大主题，一键复制 |
@@ -41,7 +42,7 @@ _287 篇部编版古诗文的全量数字化收录 · 多维可视化 · 水墨�
 
 ### 📚 全量诗文收录
 
-287 篇诗文完整收录，每篇配备：
+319 篇诗文完整收录，每篇配备：
 
 - **原文** — 支持交互式注释点击，即点即查
 - **详细注释** — 逐词/逐句注释，ScrollArea 滚动阅读
@@ -477,8 +478,8 @@ bu_bian_chinese_classics/
 
 ```bash
 # 克隆项目
-git clone <repo-url>
-cd bu_bian_chinese_classics
+git clone https://github.com/InkStain258/Ancient-Poems-and-Texts-for-Primary-and-Secondary-Schools.git
+cd Ancient-Poems-and-Texts-for-Primary-and-Secondary-Schools
 
 # 安装依赖
 npm install
@@ -504,6 +505,30 @@ npm run build
 # dist/ 即为可部署的静态文件目录
 npx serve dist
 ```
+
+---
+
+## 🆕 v1.3 更新日志
+
+### 📚 数据全量校勘（287 → 319 篇）
+- **补齐缺失篇目 32 篇**：七上/七下/八上/九下课外古诗词诵读与课文（秋词、夜雨寄北、望岳、游山西村、饮酒其五、春望、雁门太守行、赤壁、渔家傲等 25 篇）+ 小学 7 篇（浪淘沙其七、鹿柴、精卫填海、少年中国说、古人谈读书、浣溪沙·游蕲水清泉寺、清平乐·春归何处），小学对齐官方 129 篇目录
+- **修复重大数据错误**：高中《论语》十二章原文错乱（误为词文）；屈原列传、苏武传、促织、与妻书、琵琶行并序、孔雀东南飞并序（357 句 1785 字精确还原）、归去来兮辞并序等 7 篇长文整篇重建
+- **分类勘误**：年级 3 处、文体 17 处（词牌统一归类、七律·长征归诗、游园归曲等）、字数/句数统计全量重算
+- **作者库 125 → 135 位**，新增晏殊、朱敦儒、赵师秀、陈子昂、谭嗣同、夏完淳、王磐、梁启超等
+
+### 🛠️ 开发工程重建
+- 本仓库现为**完整 Vite 5 + React 18 + TypeScript 5 开发工程**（原先仅打包产物），`npm install && npm run dev` 即可开发
+- GitHub Actions 升级为 **npm build → 自动部署 Pages**
+
+### 🎨 玻璃拟态 × 极光视觉体系
+- 全局极光氛围层（缓漂光球 + 噪点质感），暗色调色板重调为冷墨夜蓝
+- 玻璃工具类体系（glass / card-modern / glass-nav / text-aurora），ECharts 注册极光主题全站图表统一换装
+- 默认深色主题；关于/长卷/日历三页炫酷化改造
+
+### 📊 统计页与海报深度优化
+- **行迹图**：节点按到访数分级、枢纽城市金色涟漪、tooltip 富化（典故 + 行迹站位）、作者图例显隐
+- **知识图谱**：标签分层防遮挡、边曲率错开防重叠、力导参数随规模自适应、tooltip 显示关联篇数
+- **海报重构**：画布高度随内容动态计算、中文避头尾换行、墨夜极光/宣纸雅致双主题、异常兜底重试
 
 ---
 
@@ -552,7 +577,7 @@ npx serve dist
 ### AI 生成内容说明
 
 - **代码**：所有源代码均由 AI 生成，经人工审核与调试后确认可用
-- **数据**：287 篇诗文的注释、译文、赏析、可视化数据由 AI 生成并经人工校验
+- **数据**：319 篇诗文的注释、译文、赏析、可视化数据由 AI 生成并经人工校验
 - **美术素材**：18 幅水墨装饰画由 AI 图像生成模型创作
 - **文学常识卡片**：242 张卡片的题目与内容由 AI 生成
 - **水墨名句**：360 条名句的选取与分类由 AI 完成
