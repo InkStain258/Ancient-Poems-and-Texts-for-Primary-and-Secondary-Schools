@@ -1554,6 +1554,47 @@ mark.search-highlight {
   pointer-events: none;
 }
 
+/* 星野网格：缓慢漂移的微光点阵（暗色为主，亮色极淡） */
+.aurora-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, hsl(var(--foreground) / 0.5) 0.7px, transparent 0.7px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 95% 75% at 50% 0%, black 0%, transparent 72%);
+  mask-image: radial-gradient(ellipse 95% 75% at 50% 0%, black 0%, transparent 72%);
+  opacity: 0.1;
+  animation: starDrift 160s linear infinite;
+}
+.dark .aurora-layer::before {
+  opacity: 0.22;
+}
+@keyframes starDrift {
+  to { background-position: 520px 260px; }
+}
+
+/* 流光织网：极慢旋转的锥形渐变，营造"呼吸的天幕" */
+.aurora-layer::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  background: conic-gradient(
+    from 0deg at 50% 38%,
+    transparent 0deg,
+    hsl(var(--aurora-1) / 0.05) 40deg,
+    transparent 95deg,
+    hsl(var(--aurora-2) / 0.05) 160deg,
+    transparent 230deg,
+    hsl(var(--aurora-3) / 0.04) 290deg,
+    transparent 360deg
+  );
+  filter: blur(70px);
+  animation: meshSpin 110s linear infinite;
+}
+@keyframes meshSpin {
+  to { transform: rotate(360deg); }
+}
+
 .aurora-orb {
   position: absolute;
   border-radius: 9999px;
@@ -1620,6 +1661,47 @@ mark.search-highlight {
   inset: 0;
   opacity: 0.5;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* 极光彩带：横贯天幕的柔光带，缓慢摆动 */
+.aurora-ribbon {
+  position: absolute;
+  left: -20%;
+  width: 140%;
+  height: 18vh;
+  border-radius: 9999px;
+  filter: blur(52px);
+  pointer-events: none;
+}
+.aurora-ribbon-1 {
+  top: 16%;
+  background: linear-gradient(90deg, transparent 0%, hsl(var(--aurora-1) / 0.5) 28%, hsl(var(--aurora-2) / 0.45) 55%, hsl(var(--aurora-3) / 0.3) 78%, transparent 100%);
+  opacity: 0.1;
+  transform: rotate(-4deg);
+  animation: ribbonSweep 34s ease-in-out infinite;
+}
+.aurora-ribbon-2 {
+  top: 58%;
+  background: linear-gradient(90deg, transparent 0%, hsl(var(--aurora-2) / 0.4) 35%, hsl(var(--aurora-3) / 0.32) 65%, transparent 100%);
+  opacity: 0.08;
+  transform: rotate(3deg);
+  animation: ribbonSweep 44s ease-in-out infinite reverse;
+}
+.dark .aurora-ribbon-1 { opacity: 0.14; }
+.dark .aurora-ribbon-2 { opacity: 0.11; }
+@keyframes ribbonSweep {
+  0%, 100% { transform: translateX(-4%) rotate(-4deg) scaleY(1); }
+  50%      { transform: translateX(5%) rotate(3deg) scaleY(1.35); }
+}
+.aurora-ribbon-2 { animation-name: ribbonSweep2; }
+@keyframes ribbonSweep2 {
+  0%, 100% { transform: translateX(4%) rotate(3deg) scaleY(1); }
+  50%      { transform: translateX(-5%) rotate(-2deg) scaleY(1.3); }
+}
+
+/* 暗色暗角：聚焦中央内容 */
+.dark .aurora-layer::after {
+  opacity: 0.85;
 }
 
 /* ---------- 3. 玻璃拟态工具类 ---------- */

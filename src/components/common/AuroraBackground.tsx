@@ -11,6 +11,8 @@ export default function AuroraBackground() {
       <div className="aurora-orb aurora-orb-1" />
       <div className="aurora-orb aurora-orb-2" />
       <div className="aurora-orb aurora-orb-3" />
+      <div className="aurora-ribbon aurora-ribbon-1" />
+      <div className="aurora-ribbon aurora-ribbon-2" />
       <div className="aurora-noise" />
     </div>
   );

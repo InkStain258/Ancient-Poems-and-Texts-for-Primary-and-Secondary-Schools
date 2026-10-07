@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocation } from 'react-router-dom';
 import { useAIStore, sendChatMessage, fetchMCPTools, disconnectMCP, type ToolCallItem, type MCPTool, type AIConfig } from '@/stores/useAIStore';
+import { getWorkById } from '@/services/DataService';
 import {
   MessageSquare,
   Settings,
@@ -16,6 +18,7 @@ import {
   CheckCircle2,
   AlertCircle,
   RotateCcw,
+  FileText,
 } from 'lucide-react';
 
 // ─────────────────────────────────────────────
@@ -345,8 +348,8 @@ function MessageBubble({ role, content, reasoning, toolCalls, isLast, isGenerati
               : 'rounded-2xl rounded-tl-sm border shadow-sm'
           }`}
           style={isUser ? {
-            background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.85) 100%)',
-            boxShadow: '0 4px 16px hsl(var(--primary) / 0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
+            background: 'linear-gradient(135deg, hsl(var(--aurora-3)) 0%, hsl(var(--primary)) 42%, hsl(var(--aurora-2)) 100%)',
+            boxShadow: '0 4px 18px hsl(var(--primary) / 0.3), 0 0 24px hsl(var(--aurora-2) / 0.12), inset 0 1px 0 rgba(255,255,255,0.18)',
           } : {
             background: 'hsl(var(--muted) / 0.6)',
             borderColor: 'hsl(var(--border) / 0.5)',
@@ -619,9 +622,17 @@ export default function AIFloatingBall() {
     useAIStore();
   const [showSettings, setShowSettings] = useState(!config.apiBase);
   const [inputValue, setInputValue] = useState('');
+  const [attachContext, setAttachContext] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { pos, isDragging, didDrag, onPointerDown, onPointerMove, onPointerUp } = useDraggable();
+
+  // 上下文感知：诗文详情页自动识别当前作品，一键附带给 AI
+  const location = useLocation();
+  const ctxWork = useMemo(() => {
+    const m = location.pathname.match(/^\/works\/([^/]+)$/);
+    return m ? getWorkById(m[1]) ?? null : null;
+  }, [location.pathname]);
 
   const visibleMessages = useMemo(
     () => messages.filter((m) => m.role !== 'system'),
@@ -642,8 +653,20 @@ export default function AIFloatingBall() {
     const msg = inputValue.trim();
     if (!msg || isGenerating) return;
     setInputValue('');
-    await sendChatMessage(msg);
-  }, [inputValue, isGenerating]);
+    // 上下文注入：附带当前诗文题面，让 AI「看得见」用户正在读的作品
+    if (attachContext && ctxWork) {
+      const brief = ctxWork.text.sentences.slice(0, 8).join(' ');
+      const body =
+        ctxWork.text.sentences.length > 8
+          ? `${brief}……（全文共 ${ctxWork.text.sentences.length} 句）`
+          : brief;
+      await sendChatMessage(
+        `【当前诗文】《${ctxWork.title}》 ${ctxWork.dynasty}·${ctxWork.author}\n${body}\n\n【我的问题】${msg}`
+      );
+    } else {
+      await sendChatMessage(msg);
+    }
+  }, [inputValue, isGenerating, attachContext, ctxWork]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -743,8 +766,8 @@ export default function AIFloatingBall() {
       }}
     >
       {/* Top glow accent line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, hsl(var(--primary) / 0.6), transparent)' }}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, hsl(var(--aurora-3) / 0.7), hsl(var(--aurora-2) / 0.55), transparent)' }}
       />
 
       {/* Header */}
@@ -801,6 +824,40 @@ export default function AIFloatingBall() {
           </button>
         </div>
       </div>
+
+      {/* 上下文附件条：诗文详情页自动出现，一键附带当前作品 */}
+      {!showSettings && ctxWork && (
+        <div
+          className="px-4 py-2 border-b border-border/30 shrink-0 ai-fade-in flex items-center justify-between gap-2"
+          style={{ background: 'hsl(var(--primary) / 0.04)' }}
+        >
+          <button
+            onClick={() => setAttachContext((v) => !v)}
+            className="flex items-center gap-1.5 min-w-0 text-left group"
+            title={attachContext ? '点击取消附带当前诗文' : '点击附带当前诗文'}
+          >
+            <FileText
+              className={`w-3.5 h-3.5 shrink-0 transition-colors ${attachContext ? 'text-primary' : 'text-muted-foreground'}`}
+            />
+            <span
+              className={`text-[11px] truncate transition-colors ${
+                attachContext ? 'text-foreground' : 'text-muted-foreground line-through'
+              }`}
+            >
+              《{ctxWork.title}》· {ctxWork.author}
+            </span>
+          </button>
+          <span
+            className={`text-[9px] px-1.5 py-0.5 rounded-full border shrink-0 transition-colors ${
+              attachContext
+                ? 'bg-primary/10 text-primary border-primary/25'
+                : 'text-muted-foreground border-border/50'
+            }`}
+          >
+            {attachContext ? '已附带' : '未附带'}
+          </span>
+        </div>
+      )}
 
       {/* Settings Panel */}
       {showSettings && (
@@ -871,7 +928,16 @@ export default function AIFloatingBall() {
               <p className="text-xs text-muted-foreground mt-1">赏析、注释、翻译、典故…</p>
             </div>
             <div className="flex flex-wrap gap-1.5 justify-center max-w-[280px] mt-1">
-              {['赏析《静夜思》', '文言文如何翻译', '什么是借景抒情', '杜甫的代表作', '《鸿门宴》背景'].map((q) => (
+              {[
+                '赏析《静夜思》',
+                '把《出师表》译成白话',
+                '什么是借景抒情？',
+                '李清照词风的特点',
+                '《鸿门宴》人物分析',
+                '如何背诵长文言文',
+                '用典是什么手法',
+                '对比《念奴娇》与《永遇乐》',
+              ].map((q) => (
                 <button
                   key={q}
                   onClick={() => {
