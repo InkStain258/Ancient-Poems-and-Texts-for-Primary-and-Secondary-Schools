@@ -68,6 +68,16 @@ export default function CalendarPage() {
     return getWorkForDate(selectedDate, allWorks);
   }, [selectedDate, allWorks]);
 
+  // 键盘 ← → 翻月
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prevMonth();
+      else if (e.key === 'ArrowRight') nextMonth();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
   const isToday = (d: Date) =>
     d.getFullYear() === today.getFullYear() &&
     d.getMonth() === today.getMonth() &&
@@ -77,23 +87,39 @@ export default function CalendarPage() {
     <div className="container mx-auto px-4 py-6 space-y-6">
       {/* 标题 */}
       <div className="text-center animate-fade-in-up">
-        <h1 className="text-3xl font-bold poem-title shimmer-glow flex items-center justify-center gap-2">
+        <h1 className="text-3xl font-bold poem-title flex items-center justify-center gap-2">
           <Calendar className="h-8 w-8 text-primary" />
-          诗词日历
+          <span className="text-aurora">诗词日历</span>
         </h1>
-        <p className="text-muted-foreground mt-2">365 天，每天一首，与古人共鸣</p>
+        <p className="text-muted-foreground mt-2">
+          365 天 · {allWorks.length} 篇轮转 · 每天一首，与古人共鸣 ·{' '}
+          <kbd className="glass-chip px-1.5 py-0.5 text-[10px]">←</kbd>{' '}
+          <kbd className="glass-chip px-1.5 py-0.5 text-[10px]">→</kbd> 翻月
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* 日历网格 */}
         <div className="lg:col-span-3 animate-fade-in-up stagger-1">
-          <Card className="paper-texture">
+          <Card className="card-modern relative overflow-hidden">
             <CardContent className="p-4">
               {/* 月份导航 */}
               <div className="flex items-center justify-between mb-4">
-                <Button variant="ghost" size="icon" onClick={prevMonth}>
-                  <ChevronLeft className="h-5 w-5" />
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" onClick={prevMonth}>
+                    <ChevronLeft className="h-5 w-5" />
+                  </Button>
+                  <button
+                    className="glass-chip px-3 py-1 text-xs font-medium text-primary hover:scale-105 transition-transform"
+                    onClick={() => {
+                      setCurrentYear(today.getFullYear());
+                      setCurrentMonth(today.getMonth());
+                      setSelectedDate(today);
+                    }}
+                  >
+                    今天
+                  </button>
+                </div>
                 <h2 className="text-xl font-bold poem-title">
                   {currentYear}年 {MONTH_NAMES[currentMonth]}
                 </h2>
@@ -125,16 +151,29 @@ export default function CalendarPage() {
                   return (
                     <button
                       key={date.toISOString()}
-                      className={`relative p-1.5 rounded-lg text-sm transition-all hover:bg-primary/10 ${
-                        isSelected ? 'bg-primary/15 ring-2 ring-primary/50 font-bold' : ''
+                      title={`${work.title} · ${work.author}`}
+                      className={`relative p-1.5 rounded-lg text-sm transition-all hover:bg-primary/10 hover:scale-105 ${
+                        isSelected ? 'bg-primary/15 font-bold' : ''
                       } ${todayFlag ? 'font-bold text-primary' : ''}`}
+                      style={
+                        isSelected
+                          ? { boxShadow: '0 0 0 2px hsl(var(--primary) / 0.5), 0 0 18px hsl(var(--primary) / 0.25)' }
+                          : undefined
+                      }
                       onClick={() => setSelectedDate(date)}
                     >
                       <span className={todayFlag ? 'text-primary' : ''}>{date.getDate()}</span>
                       {/* 日期下方的诗意小点 */}
                       <div
-                        className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
-                        style={{ backgroundColor: `hsl(${(getDayOfYear(date) * 37) % 360} 50% 55%)` }}
+                        className={`absolute bottom-0.5 left-1/2 -translate-x-1/2 rounded-full transition-all ${
+                          todayFlag ? 'w-1.5 h-1.5 breathe' : 'w-1 h-1'
+                        }`}
+                        style={{
+                          backgroundColor: `hsl(${(getDayOfYear(date) * 37) % 360} 60% 55%)`,
+                          boxShadow: todayFlag
+                            ? `0 0 8px hsl(${(getDayOfYear(date) * 37) % 360} 70% 60%)`
+                            : undefined,
+                        }}
                       />
                     </button>
                   );
@@ -169,8 +208,8 @@ export default function CalendarPage() {
             return (
               <button
                 key={mIdx}
-                className={`text-left p-3 rounded-lg border transition-all hover:border-primary/40 hover:bg-primary/5 ${
-                  mIdx === currentMonth ? 'border-primary/50 bg-primary/5' : 'border-border/30'
+                className={`glass glass-hover text-left p-3 rounded-xl ${
+                  mIdx === currentMonth ? 'ring-1 ring-primary/40' : ''
                 }`}
                 onClick={() => {
                   setCurrentMonth(mIdx);
@@ -204,7 +243,7 @@ function DailyPoemCard({ work, date, onPoster }: { work: ClassicalWork; date: Da
   const dateStr = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
 
   return (
-    <Card className="paper-texture corner-decoration h-full">
+    <Card className="card-modern corner-decoration h-full">
       <CardContent className="p-5 flex flex-col h-full">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm text-muted-foreground">{dateStr}</span>

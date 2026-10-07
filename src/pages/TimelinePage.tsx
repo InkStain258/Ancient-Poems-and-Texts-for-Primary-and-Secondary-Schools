@@ -1,8 +1,7 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { getAllWorks, getWorksByDynasty } from '@/services/DataService';
 import { DYNASTIES } from '@/types';
@@ -35,7 +34,6 @@ const DYNASTY_META: DynastyMeta[] = [
 export default function TimelinePage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeDynasty, setActiveDynasty] = useState<Dynasty>('唐');
-  const [expanded, setExpanded] = useState<Set<Dynasty>>(new Set(['唐']));
 
   const dynastyWorksMap = useMemo(() => {
     const map = new Map<Dynasty, ClassicalWork[]>();
@@ -48,14 +46,18 @@ export default function TimelinePage() {
   const activeWorks = dynastyWorksMap.get(activeDynasty) ?? [];
   const activeMeta = DYNASTY_META.find(m => m.dynasty === activeDynasty)!;
 
-  const toggleExpand = (d: Dynasty) => {
-    setExpanded(prev => {
-      const next = new Set(prev);
-      if (next.has(d)) next.delete(d);
-      else next.add(d);
-      return next;
-    });
-  };
+  // 键盘 ← → 切换朝代
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        setActiveDynasty((prev) => DYNASTIES[Math.max(0, DYNASTIES.indexOf(prev) - 1)]);
+      } else if (e.key === 'ArrowRight') {
+        setActiveDynasty((prev) => DYNASTIES[Math.min(DYNASTIES.length - 1, DYNASTIES.indexOf(prev) + 1)]);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const scrollToDynasty = (idx: number) => {
     if (!scrollRef.current) return;
@@ -71,8 +73,12 @@ export default function TimelinePage() {
     <div className="container mx-auto px-4 py-6 space-y-6">
       {/* 页面标题 */}
       <div className="text-center animate-fade-in-up">
-        <h1 className="text-3xl font-bold poem-title shimmer-glow">时空穿越长卷</h1>
-        <p className="text-muted-foreground mt-2">横贯千年文脉，纵览朝代诗风</p>
+        <h1 className="text-3xl font-bold poem-title text-aurora">时空穿越长卷</h1>
+        <p className="text-muted-foreground mt-2">
+          横贯千年文脉，纵览朝代诗风 ·{' '}
+          <kbd className="glass-chip px-1.5 py-0.5 text-[10px]">←</kbd>{' '}
+          <kbd className="glass-chip px-1.5 py-0.5 text-[10px]">→</kbd> 键切换朝代
+        </p>
       </div>
 
       {/* 朝代导航条 */}
@@ -112,36 +118,79 @@ export default function TimelinePage() {
             return (
               <button
                 key={meta.dynasty}
-                className={`snap-center shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border-2 transition-all duration-300 min-w-[110px] ${
+                className={`snap-center shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border transition-all duration-300 min-w-[110px] ${
                   isActive
-                    ? 'border-primary bg-primary/10 shadow-lg scale-105'
-                    : 'border-border/50 bg-card hover:border-primary/30 hover:bg-primary/5'
+                    ? 'scale-105'
+                    : 'border-border/50 bg-card/60 backdrop-blur-sm hover:border-primary/30 hover:bg-primary/5 hover:scale-[1.02]'
                 }`}
+                style={
+                  isActive
+                    ? {
+                        borderColor: meta.color,
+                        background: `linear-gradient(160deg, ${meta.color}1f 0%, transparent 75%)`,
+                        boxShadow: `0 10px 30px ${meta.color}30, 0 0 0 1px ${meta.color}40`,
+                      }
+                    : undefined
+                }
                 onClick={() => setActiveDynasty(meta.dynasty)}
               >
-                <span className="text-2xl">{meta.icon}</span>
-                <span className={`font-bold text-base poem-title ${isActive ? 'text-primary' : ''}`}>
+                <span className={`text-2xl transition-transform duration-300 ${isActive ? 'scale-125' : ''}`}>
+                  {meta.icon}
+                </span>
+                <span
+                  className="font-bold text-base poem-title"
+                  style={isActive ? { color: meta.color } : undefined}
+                >
                   {meta.dynasty}
                 </span>
                 <span className="text-[10px] text-muted-foreground whitespace-nowrap">{meta.period}</span>
-                <Badge variant={isActive ? 'default' : 'secondary'} className="text-[10px] px-1.5">
+                <span
+                  className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
+                  style={
+                    isActive
+                      ? { backgroundColor: meta.color + '22', color: meta.color, border: `1px solid ${meta.color}44` }
+                      : { backgroundColor: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }
+                  }
+                >
                   {workCount} 篇
-                </Badge>
+                </span>
               </button>
             );
           })}
+        </div>
+
+        {/* 朝代光谱脊线 */}
+        <div
+          className="relative h-1 mx-12 rounded-full opacity-80"
+          style={{ background: `linear-gradient(90deg, ${DYNASTY_META.map((m) => m.color).join(', ')})` }}
+        >
+          <span
+            className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-background border-2 transition-all duration-500"
+            style={{
+              left: `calc(${((currentIdx + 0.5) / DYNASTY_META.length) * 100}% - 7px)`,
+              borderColor: activeMeta.color,
+              boxShadow: `0 0 14px 3px ${activeMeta.color}66`,
+            }}
+          />
         </div>
       </div>
 
       {/* 当前朝代详情 */}
       <div className="animate-fade-in-up" key={activeDynasty}>
         {/* 朝代信息卡 */}
-        <Card className="paper-texture relative overflow-hidden mb-6">
+        <Card
+          className="card-modern relative overflow-hidden mb-6"
+          style={{ boxShadow: `0 18px 48px ${activeMeta.color}22, 0 0 0 1px ${activeMeta.color}18` }}
+        >
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               <div
-                className="w-16 h-16 rounded-full flex items-center justify-center text-3xl shrink-0"
-                style={{ backgroundColor: activeMeta.color + '20', border: `2px solid ${activeMeta.color}40` }}
+                className="w-16 h-16 rounded-full flex items-center justify-center text-3xl shrink-0 breathe"
+                style={{
+                  backgroundColor: activeMeta.color + '20',
+                  border: `2px solid ${activeMeta.color}40`,
+                  boxShadow: `0 0 24px ${activeMeta.color}44`,
+                }}
               >
                 {activeMeta.icon}
               </div>
@@ -184,7 +233,7 @@ export default function TimelinePage() {
             const dominant = STYLE_DIMENSIONS.reduce((a, b) => scores[a] > scores[b] ? a : b);
             return (
               <Link key={w.id} to={`/works/${w.id}`} className="group">
-                <Card className="card-ink-hover h-full paper-texture relative overflow-hidden">
+                <Card className="card-modern h-full relative overflow-hidden">
                   <CardContent className="p-4">
                     {/* 标题行 */}
                     <div className="flex items-start justify-between gap-2 mb-2">

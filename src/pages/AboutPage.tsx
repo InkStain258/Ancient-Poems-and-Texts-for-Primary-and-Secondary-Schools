@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { getAllWorks, getWorksByStage } from '@/services/DataService';
+import { authors } from '@/data/authors';
 import {
   BookOpen, Search, BarChart3, Network, MessageCircle, Sparkles,
   Github, ExternalLink, Scale, Feather, GraduationCap, Heart,
@@ -92,9 +94,24 @@ export default function AboutPage() {
   const makerVisible = useScrollVisible();
   const licenseVisible = useScrollVisible();
 
-  const countWorks = useAnimatedCounter(287, 1200, statsVisible.visible);
-  const countAuthors = useAnimatedCounter(125, 1200, statsVisible.visible);
+  // 动态统计：直接从数据源计算，与数据保持同步，永不过期
+  const stats = useMemo(() => {
+    const all = getAllWorks();
+    return {
+      total: all.length,
+      authors: authors.length,
+      primary: getWorksByStage('小学').length,
+      middle: getWorksByStage('初中').length,
+      high: getWorksByStage('高中').length,
+      themes: new Set(all.flatMap((w) => w.themes)).size,
+      dynasties: new Set(all.map((w) => w.dynasty)).size,
+    };
+  }, []);
+
+  const countWorks = useAnimatedCounter(stats.total, 1200, statsVisible.visible);
+  const countAuthors = useAnimatedCounter(stats.authors, 1200, statsVisible.visible);
   const countStages = useAnimatedCounter(3, 600, statsVisible.visible);
+  const countThemes = useAnimatedCounter(stats.themes, 1200, statsVisible.visible);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl space-y-12">
@@ -110,7 +127,7 @@ export default function AboutPage() {
         <div className="inline-block mb-4">
           <span className="seal-stamp">关于</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-primary poem-title mb-3 shimmer-text">
+        <h1 className="text-3xl md:text-4xl font-bold text-primary poem-title mb-3 text-aurora">
           关于我们
         </h1>
         <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
@@ -121,28 +138,25 @@ export default function AboutPage() {
       <div className="ink-divider max-w-xs mx-auto" />
 
       {/* Stats Counter Section */}
-      <div ref={statsVisible.ref} className="grid grid-cols-3 gap-6">
-        <div className={`text-center transition-all duration-700 ${statsVisible.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="relative inline-block">
-            <p className="text-5xl md:text-6xl font-bold text-primary poem-title tabular-nums">{countWorks}</p>
-            <div className="absolute -right-3 -top-1 w-3 h-3 rounded-full bg-primary/20 animate-pulse" />
+      <div ref={statsVisible.ref} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { value: countWorks, label: '诗文篇目', hint: `${stats.dynasties} 个朝代` },
+          { value: countAuthors, label: '历代作者', hint: '先秦至近现代' },
+          { value: countStages, label: '学段覆盖', hint: '小学 · 初中 · 高中' },
+          { value: countThemes, label: '主题分类', hint: `${stats.total} 篇全覆盖` },
+        ].map((s, i) => (
+          <div
+            key={s.label}
+            className={`card-modern text-center py-6 px-3 transition-all duration-700 ${
+              statsVisible.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+            style={{ transitionDelay: `${i * 0.1}s` }}
+          >
+            <p className="text-4xl md:text-5xl font-bold poem-title tabular-nums text-aurora">{s.value}</p>
+            <p className="text-sm font-medium mt-2 poem-text-sm">{s.label}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{s.hint}</p>
           </div>
-          <p className="text-sm text-muted-foreground mt-2 poem-text-sm">诗文篇目</p>
-        </div>
-        <div className={`text-center transition-all duration-700 delay-100 ${statsVisible.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="relative inline-block">
-            <p className="text-5xl md:text-6xl font-bold text-primary poem-title tabular-nums">{countAuthors}</p>
-            <div className="absolute -right-3 -top-1 w-3 h-3 rounded-full bg-primary/20 animate-pulse" />
-          </div>
-          <p className="text-sm text-muted-foreground mt-2 poem-text-sm">历代作者</p>
-        </div>
-        <div className={`text-center transition-all duration-700 delay-200 ${statsVisible.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="relative inline-block">
-            <p className="text-5xl md:text-6xl font-bold text-primary poem-title tabular-nums">{countStages}</p>
-            <div className="absolute -right-3 -top-1 w-3 h-3 rounded-full bg-primary/20 animate-pulse" />
-          </div>
-          <p className="text-sm text-muted-foreground mt-2 poem-text-sm">学段覆盖</p>
-        </div>
+        ))}
       </div>
 
       <div className="ink-divider max-w-xs mx-auto" />
@@ -159,7 +173,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold poem-title brush-underline pb-1">功能介绍</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FeatureCard icon={<Library className="h-5 w-5" />} title="全量诗文收录" description="涵盖小学、初中、高中部编版语文教材全部 287 篇古诗文，125 位作者，横跨多个朝代，篇篇有注释赏析。" index={0} visible={featuresVisible.visible} />
+          <FeatureCard icon={<Library className="h-5 w-5" />} title="全量诗文收录" description={`涵盖小学、初中、高中部编版语文教材全部 ${stats.total} 篇古诗文，${stats.authors} 位作者，横跨多个朝代，篇篇有注释赏析。`} index={0} visible={featuresVisible.visible} />
           <FeatureCard icon={<Search className="h-5 w-5" />} title="全文智能搜索" description="基于 Fuse.js 模糊搜索引擎，支持按标题、作者、朝代、主题、原文内容等多维度即时检索。" index={1} visible={featuresVisible.visible} />
           <FeatureCard icon={<Eye className="h-5 w-5" />} title="五维分类筛选" description="按学段、朝代、主题、体裁、作者五大维度自由组合筛选，快速定位感兴趣的诗文。" index={2} visible={featuresVisible.visible} />
           <FeatureCard icon={<BarChart3 className="h-5 w-5" />} title="数据可视化" description="ECharts 驱动的统计图表：朝代分布、主题词云、学段对比、作者产出排行，以图表洞察诗文全貌。" index={3} visible={featuresVisible.visible} />
@@ -207,7 +221,7 @@ export default function AboutPage() {
                 <div className="verse-highlight">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">小学</span>
-                    <span className="text-xs text-muted-foreground">122 篇</span>
+                    <span className="text-xs text-muted-foreground">{stats.primary} 篇</span>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     以短小精悍的唐诗宋词为主，注重语言感知与审美启蒙，从《静夜思》到《村居》，陪伴孩子走进古典诗词的世界。
@@ -221,7 +235,7 @@ export default function AboutPage() {
                 <div className="verse-highlight">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">初中</span>
-                    <span className="text-xs text-muted-foreground">97 篇</span>
+                    <span className="text-xs text-muted-foreground">{stats.middle} 篇</span>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     篇目难度与篇幅递增，从《桃花源记》的乌托邦想象到《岳阳楼记》的家国情怀，培养学生文言文阅读能力与人文素养。
@@ -235,7 +249,7 @@ export default function AboutPage() {
                 <div className="verse-highlight">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">高中</span>
-                    <span className="text-xs text-muted-foreground">68 篇</span>
+                    <span className="text-xs text-muted-foreground">{stats.high} 篇</span>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     选篇更为精深，从《离骚》的楚辞瑰丽到《赤壁赋》的哲思妙境，引领学生深入体会中华文化的厚重与深远。
@@ -458,7 +472,7 @@ function FeatureCard({
       onMouseLeave={handleMouseLeave}
     >
       <Card
-        className="elegant-card card-ink-hover group dark:border-white/5 transition-transform duration-200 ease-out"
+        className="card-modern group transition-transform duration-200 ease-out"
         style={{ transform: `perspective(600px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
       >
         <CardContent className="p-4 space-y-2">
